@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Palindrome Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f3f3f3;
+        }
+        .container {
+            background: white;
+            width: 350px;
+            padding: 20px;
+            border-radius: 10px;
+            margin: auto;
+            box-shadow: 0 0 10px #ccc;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #008cff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #006edc;
+        }
+        .result {
+            margin-top: 15px;
+            background: #eaf7ff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Palindrome Checker</h2>
+
+    <label>Enter a String</label>
+    <input type="text" id="text">
+
+    <button onclick="checkPalindrome()">Check</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script>
+function checkPalindrome() {
+    let str = document.getElementById("text").value;
+    let cleanStr = str.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+    let reversed = cleanStr.split("").reverse().join("");
+
+    if (cleanStr.length === 0) {
+        document.getElementById("output").innerHTML = "Enter a valid string!";
+        return;
+    }
+
+    if (cleanStr === reversed) {
+        document.getElementById("output").innerHTML = "<b>✔ '" + str + "' is a Palindrome.</b>";
+    } else {
+        document.getElementById("output").innerHTML = "<b>✖ '" + str + "' is NOT a Palindrome.</b>";
+    }
+}
+</script>
+
+</body>
+</html>
