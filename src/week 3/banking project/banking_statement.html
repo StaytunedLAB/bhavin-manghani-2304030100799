@@ -1,0 +1,214 @@
+  <!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Attendance Processing System</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f6ff;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            border-radius: 6px;
+            border: 1px solid #888;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        #output {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #eef3ff;
+            border: 1px solid #b8c6ff;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Employee Attendance Processing</h2>
+
+    <label>Employee ID:</label>
+    <input type="text" id="empId">
+
+    <label>Date:</label>
+    <input type="date" id="date">
+
+    <label>Check-In Time:</label>
+    <input type="time" id="checkIn">
+
+    <label>Check-Out Time:</label>
+    <input type="time" id="checkOut">
+
+    <label>Break Start:</label>
+    <input type="time" id="breakStart">
+
+    <label>Break End (Optional):</label>
+    <input type="time" id="breakEnd">
+
+    <label>Overtime Approved?</label>
+    <select id="overtime">
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+    </select>
+
+    <button onclick="handleAttendance()">Process Attendance</button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+// ------------------------------
+// Helper function
+// ------------------------------
+function parseTimeToMinutes(timeStr) {
+    if (!timeStr) return null;
+
+    const parts = timeStr.split(":");
+    if (parts.length !== 2) return null;
+
+    const h = parseInt(parts[0]);
+    const m = parseInt(parts[1]);
+
+    if (isNaN(h) || isNaN(m)) return null;
+
+    return h * 60 + m;
+}
+
+// ------------------------------
+// Main Attendance Function
+// ------------------------------
+function processAttendance(input) {
+
+    const data = JSON.parse(JSON.stringify(input)); // Preserve original
+    let summary = {
+        employeeId: data.employeeId || null,
+        date: data.date || null,
+        status: "",
+        totalMinutes: 0,
+        overtimeMinutes: 0,
+        note: "",
+        error: null
+    };
+
+    try {
+
+        if (!data.checkIn || !data.checkOut) {
+            summary.status = "incomplete";
+            summary.note = "Missing check-in or check-out.";
+            summary.totalMinutes = 0;
+            return summary;
+        }
+
+        const inMin = parseTimeToMinutes(data.checkIn);
+        const outMin = parseTimeToMinutes(data.checkOut);
+
+        if (inMin === null || outMin === null) {
+            throw "Invalid check-in or check-out format.";
+        }
+
+        let breakMin = 0;
+
+        if (data.breakStart) {
+            const bStart = parseTimeToMinutes(data.breakStart);
+            const bEnd = parseTimeToMinutes(data.breakEnd);
+
+            if (bStart !== null && bEnd !== null) {
+                breakMin = bEnd - bStart;
+            } else {
+                breakMin = 30;
+            }
+        }
+
+        let working = (outMin - inMin) - breakMin;
+
+        if (working < 0) {
+            summary.status = "invalid";
+            summary.note = "Working time became negative.";
+            summary.totalMinutes = 0;
+            return summary;
+        }
+
+        summary.totalMinutes = working;
+        summary.status = "complete";
+        summary.note = "Attendance processed.";
+
+        if (data.overtimeApproved === true && working > 480) {
+            summary.overtimeMinutes = working - 480;
+        }
+    }
+    catch (error) {
+        summary.status = "error";
+        summary.error = String(error);
+        summary.note = "System error occurred.";
+    }
+    finally {
+        console.log("Attendance processed successfully (finally).");
+    }
+
+    return summary;
+}
+
+// ------------------------------
+// Button Function
+// ------------------------------
+function handleAttendance() {
+
+    const input = {
+        employeeId: document.getElementById("empId").value,
+        date: document.getElementById("date").value,
+        checkIn: document.getElementById("checkIn").value,
+        checkOut: document.getElementById("checkOut").value,
+        breakStart: document.getElementById("breakStart").value,
+        breakEnd: document.getElementById("breakEnd").value,
+        overtimeApproved: document.getElementById("overtime").value === "true"
+    };
+
+    const result = processAttendance(input);
+
+    document.getElementById("output").textContent =
+        JSON.stringify(result, null, 4);
+}
+</script>
+
+</body>
+</html>
+
