@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Attendance System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f3f3;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            background: #eaf7ff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Employee Attendance System</h2>
+
+    <label>Employee ID</label>
+    <input type="text" id="empId">
+
+    <label>Employee Name</label>
+    <input type="text" id="empName">
+
+    <label>Attendance Status</label>
+    <select id="status">
+        <option value="">Select</option>
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+    </select>
+
+    <button onclick="markAttendance()">Add Attendance</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script>
+let attendanceList = [];
+
+function markAttendance() {
+    try {
+        let id = document.getElementById("empId").value.trim();
+        let name = document.getElementById("empName").value.trim();
+        let status = document.getElementById("status").value;
+
+        // Validation
+        if (id === "" || name === "" || status === "") {
+            throw new Error("All fields are required!");
+        }
+
+        // Store attendance
+        attendanceList.push({
+            empId: id,
+            empName: name,
+            status: status
+        });
+
+        displayAttendance();
+
+        // Clear fields
+        document.getElementById("empId").value = "";
+        document.getElementById("empName").value = "";
+        document.getElementById("status").value = "";
+
+    } catch (error) {
+        document.getElementById("output").innerHTML =
+            "<b style='color:red'>" + error.message + "</b>";
+    }
+}
+
+function displayAttendance() {
+    let presentCount = 0;
+    let absentCount = 0;
+    let listHTML = "<b>Attendance Records:</b><ul>";
+
+    for (let emp of attendanceList) {
+        listHTML += `<li>${emp.empId} - ${emp.empName} : ${emp.status}</li>`;
+        if (emp.status === "Present") presentCount++;
+        else absentCount++;
+    }
+
+    listHTML += "</ul>";
+    listHTML += `<b>Total Present:</b> ${presentCount}<br>`;
+    listHTML += `<b>Total Absent:</b> ${absentCount}`;
+
+    document.getElementById("output").innerHTML = listHTML;
+}
+</script>
+
+</body>
+</html>
