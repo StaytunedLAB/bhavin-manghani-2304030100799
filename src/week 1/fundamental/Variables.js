@@ -2,7 +2,7 @@
 
 // let in javaScript ⬇️
 
-let name = "Maulik Thakor";
+let name = "bhawin manghani"; // declaration and initialization
 console.log("Name:", name);
 
 let WelcomeMessage = "Welcome to JavaScript Fundamentals!";

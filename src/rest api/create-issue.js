@@ -6,9 +6,9 @@ const octokit = new Octokit({
 
 async function createIssue () {
     try {
-        await octokit.request('POST /repos/StaytunedLAB/maulik-thakor-2304030101822/issues', {
+        await octokit.request('POST /repos/StaytunedLAB/bhawin-manghani-2304030100799/issues', {
             owner: 'StaytunedLAB',
-            repo: 'maulik-thakor-2304030101822',
+            repo: 'bhawin-manghani-2304030100799',
             title: 'issue created using javascript code',
             body: "issue created using javascript code using rest api key token.",
             labels: ['Task'],

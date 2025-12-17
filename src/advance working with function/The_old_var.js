@@ -3,7 +3,7 @@ alert(message); // Hi
 
 // “var” has no block scope
 if (true) {
-    var test = true; // use "var" instead of "let"
+    var test = truee; // use "var" instead of "let"
 }
 
 alert(test); // true, the variable lives after if
