@@ -1,7 +1,7 @@
 // The “name” property
 
 function sayHi () {
-    alert("Hi");
+    alert("Hii");
 }
 
 alert(sayHi.name); // sayHi
