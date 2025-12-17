@@ -29,7 +29,7 @@ if (marks >= 90) {
 
 // Tasks 
 if ("0") {
-    alert( 'Hello' );
+    alert( 'Hi' );
 }
 
 let a = 1;
